@@ -1,0 +1,729 @@
+/* ========================
+   1. RESET E VARIÁVEIS
+   ======================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --marvel-red: #ec1d24;
+    --marvel-dark: #202020;
+    --text-white: #ffffff;
+    --bg-overlay: rgba(0, 0, 0, 0.7);
+}
+
+/* BACKGROUND CORRIGIDO PARA PRINT E VISUALIZAÇÃO + SUAVIZAÇÃO */
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-white);
+    overflow-x: hidden;
+
+    /* Cor de fundo base */
+    background-color: var(--marvel-dark);
+
+    /* Camada preta (0.5) + Imagem */
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+        url('src/fundocabecalho6.jpg');
+
+    /* Configuração para repetir e ficar fixo */
+    background-repeat: repeat;
+    background-position: center;
+    background-attachment: fixed;
+    /* O segredo para o print funcionar */
+    background-size: auto;
+
+    /* SUAVIZAÇÃO DA TROCA DE TEMA */
+    transition: background-color 0.5s ease, color 0.5s ease, background-image 0.5s ease;
+}
+
+/* ========================
+   2. CABEÇALHO FLEXBOX
+   ======================== */
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 1rem 2rem;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7));
+    border-bottom: 3px solid var(--marvel-red);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: background 0.5s ease, border-color 0.5s ease;
+}
+
+.brand-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo img {
+    height: 50px;
+    width: auto;
+}
+
+.nomeDoSite {
+    background-color: var(--marvel-red);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transform: skew(-10deg);
+}
+
+.nomeDoSite h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    margin: 0;
+    transform: skew(10deg);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 400;
+    color: white;
+}
+
+.menu {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.menu a {
+    color: var(--text-white);
+    text-decoration: none;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 1rem;
+    transition: color 0.3s;
+    position: relative;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+}
+
+.menu a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--marvel-red);
+    transition: width 0.3s;
+}
+
+.menu a:hover::after {
+    width: 100%;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.auth-buttons {
+    font-family: 'Bebas Neue', sans-serif;
+    font-weight: 400;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-auth {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: var(--marvel-red);
+    padding: 5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 400;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.btn-auth:hover {
+    transform: scale(1.05);
+    background-color: #ff3333;
+}
+
+.btn-auth img {
+    width: 20px;
+    height: 20px;
+}
+
+.barraDeIcones {
+    display: flex;
+    gap: 10px;
+}
+
+.barraDeIcones a {
+    color: white;
+    font-size: 1.1rem;
+    border: 1px solid white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.barraDeIcones a:hover {
+    background-color: var(--marvel-red);
+    border-color: var(--marvel-red);
+}
+
+/* ========================
+   3. CARROSSEL PRINCIPAL (TOPO)
+   ======================== */
+.carrossel-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    height: 500px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.carrossel-track {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1.2rem;
+    border: 2px solid var(--marvel-red);
+}
+
+.prev-btn,
+.next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    padding: 10px 15px;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.3s;
+}
+
+.prev-btn:hover,
+.next-btn:hover {
+    background-color: var(--marvel-red);
+}
+
+.prev-btn {
+    left: 0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.next-btn {
+    right: 0;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.indicator.active {
+    background-color: var(--marvel-red);
+    transform: scale(1.2);
+}
+
+/* ========================
+   4. CONTEÚDO E CARDS
+   ======================== */
+.separacaoCard {
+    background: #ec1d24;
+    padding: 1rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    transition: background 0.5s ease, border-color 0.5s ease;
+}
+
+.separacaoCard h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    color: white;
+}
+
+.cardPrincipal {
+    background-color: #ffffff;
+    color: #333;
+    max-width: 1100px;
+    width: 90%;
+    margin: 0 auto 4rem auto;
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    border-top: 5px solid var(--marvel-red);
+    transition: background 0.5s ease, border-color 0.5s ease;
+}
+
+.card-header h1 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    color: #202020;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 1rem;
+}
+
+.intro {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    font-weight: 500;
+    color: #555;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 3rem auto;
+    font-style: italic;
+}
+
+/* ==================================================================
+   NOVO: WRAPPER PARA O BLOCO DE PERSONAGENS (CORRIGE A BORDA)
+   ================================================================== */
+.character-block-wrapper {
+    margin: 2rem 0 4rem 0;
+    border-radius: 1.2rem;
+    /* Arredondamento unificado */
+    overflow: hidden;
+    /* Corta o conteúdo que passar do arredondamento */
+    /* Sombra unificada para o bloco inteiro */
+    box-shadow: 10px 10px 0px var(--marvel-red);
+}
+
+/* --- LEGENDA FIXA (AGORA EM CIMA) --- */
+.legenda-fixa {
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 1.5rem;
+    width: 100%;
+    margin-bottom: 0;
+    /* Cola no carrossel abaixo */
+    /* Removemos box-shadow e border-radius daqui, pois o wrapper controla */
+    transition: background-color 0.5s ease;
+}
+
+.legenda-fixa h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    margin: 0;
+    text-transform: none;
+}
+
+/* --- CARROSSEL DE PERSONAGENS (AGORA EMBAIXO) --- */
+.destaque-imagem.character-carousel {
+    margin: 0;
+    /* Sem margens externas */
+    position: relative;
+    height: 500px;
+    overflow: hidden;
+    /* Removemos box-shadow e border-radius daqui, pois o wrapper controla */
+}
+
+.char-track {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.char-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.char-slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+.char-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.char-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to top, rgba(236, 29, 36, 0.95), transparent);
+    color: white;
+    padding: 3rem 1rem 1.5rem 1rem;
+    text-align: center;
+}
+
+.char-caption h3 {
+    margin: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.char-caption span {
+    font-size: 1rem;
+    font-weight: bold;
+    opacity: 1;
+}
+
+.char-prev,
+.char-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    font-size: 1.8rem;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 2rem;
+    z-index: 10;
+    transition: background 0.3s;
+}
+
+.char-prev:hover,
+.char-next:hover {
+    background-color: var(--marvel-red);
+}
+
+.char-prev {
+    left: 15px;
+}
+
+.char-next {
+    right: 15px;
+}
+
+
+/* --- SEÇÃO DO UNIVERSO INFERIOR (Esticada) --- */
+.universe-section {
+    display: flex;
+    align-items: stretch;
+    gap: 3rem;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 2px solid #eee;
+}
+
+.text-column {
+    flex: 1;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #444;
+    text-align: justify;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.text-column p {
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+    border-left: 3px solid #eee;
+    transition: border-color 0.3s;
+}
+
+.text-column p:hover {
+    border-left-color: var(--marvel-red);
+}
+
+.text-column strong {
+    color: var(--marvel-red);
+}
+
+.excelsior {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    text-align: right;
+    color: var(--marvel-red) !important;
+    margin-top: auto;
+    letter-spacing: 2px;
+    border: none !important;
+}
+
+/* Coluna da Imagem Inferior */
+.image-column {
+    flex: 1;
+    display: flex;
+}
+
+.image-column img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 10px 10px 0px var(--marvel-red);
+    transition: transform 0.3s;
+    min-height: 300px;
+    border-left: 1.5px solid #eee;
+}
+
+.image-column img:hover {
+    transform: scale(1.02);
+}
+
+
+/* ========================
+   5. RODAPÉ
+   ======================== */
+.rodape {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7));
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    border-top: 3px solid var(--marvel-red);
+    transition: background 0.5s ease, border-color 0.5s ease;
+}
+
+.Elaborado {
+    font-family: 'Bebas Neue', sans-serif;
+    font-weight: 400;
+    font-size: 1.2rem;
+}
+
+.rodape h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+    font-weight: 400;
+}
+
+.social {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+    font-weight: 400;
+}
+
+.social a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.social i {
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.social a:hover i {
+    color: var(--marvel-red);
+    transform: scale(1.2);
+}
+
+
+/* ========================
+   6. RESPONSIVIDADE (MOBILE)
+   ======================== */
+@media (max-width: 900px) {
+    .cabecalho {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .brand-group {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .menu {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .user-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .carrossel-container {
+        height: 300px;
+        width: 95%;
+    }
+
+    .cardPrincipal {
+        padding: 1.5rem;
+        width: 95%;
+    }
+
+    .card-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .intro {
+        font-size: 1.1rem;
+        text-align: left;
+    }
+
+    /* Ajuste do WRAPPER de Personagens Mobile */
+    .character-block-wrapper {
+        margin-bottom: 3rem;
+        /* Sombra menor no mobile */
+        box-shadow: 5px 5px 0px var(--marvel-red);
+    }
+
+    .destaque-imagem.character-carousel {
+        height: 350px;
+    }
+
+    .char-caption h3 {
+        font-size: 1.8rem;
+    }
+
+    /* Seção inferior em coluna */
+    .universe-section {
+        flex-direction: column-reverse;
+        gap: 2rem;
+        margin-top: 2rem;
+        align-items: center;
+    }
+
+    .text-column {
+        text-align: left;
+        display: block;
+    }
+
+    .image-column {
+        width: 100%;
+        height: auto;
+    }
+
+    .image-column img {
+        box-shadow: 5px 5px 0px var(--marvel-red);
+        height: auto;
+        max-height: 400px;
+    }
+
+    .rodape {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .carrossel-container {
+        height: 200px;
+    }
+
+    .destaque-imagem.character-carousel {
+        height: 300px;
+    }
+}
+
+/* ========================
+   TEMA CLARO (LIGHT MODE)
+   ======================== */
+body.light-theme {
+    color: #FFF;
+    /* Texto geral fica branco (conforme seu pedido) */
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+        url('src/fundocabecalho6.jpg');
+    transition: background-color 0.5s ease, color 0.5s ease, background-image 0.5s ease;
+}
+
+body.light-theme .separacaoCard {
+    background: #ec1d24;
+    border: none;
+    transition: background 0.5s ease, border-color 0.5s ease;
+}
+
+body.light-theme .cardPrincipal {
+    border-top: 5px solid var(--marvel-red);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    transition: background 0.5s ease, border-color 0.5s ease;
+}
+
+body.light-theme .text-column {
+    color: #333;
+    /* Texto dentro do card fica escuro para leitura */
+}
+
+body.light-theme .rodape h3 {
+    color: white;
+}
+
+body.light-theme .rodape {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7));
+}
+
+body.light-theme .cabecalho {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7));
+}
+
+/* Ajuste da legenda no modo claro */
+body.light-theme .legenda-fixa {
+    background-color: #111;
+}
